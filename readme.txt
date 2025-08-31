@@ -1,236 +1,217 @@
-# 🧠 Medical Text Summarization Model
-> Abstractive summarization for biomedical literature and systematic reviews using a Transformer/GPT-style decoder trained on PubMed & MS² data.
+============================================================
+   MEDICAL TEXT SUMMARIZATION MODEL
+============================================================
 
-<p align="left">
-  <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/Python-3.9%2B-blue.svg"></a>
-  <a href="#"><img alt="License" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
-  <a href="#"><img alt="Git LFS" src="https://img.shields.io/badge/Large%20Files-Git%20LFS-critical.svg"></a>
-  <a href="#"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
-</p>
+Abstractive summarization for biomedical literature and
+systematic reviews using a Transformer/GPT-style decoder
+trained on PubMed & MS² data.
 
----
+------------------------------------------------------------
+TABLE OF CONTENTS
+------------------------------------------------------------
+1. Overview
+2. Features
+3. Repository Structure
+4. Quickstart
+5. Setup & Installation
+6. Training
+7. Evaluation & Metrics
+8. Inference (Generate Summaries)
+9. Datasets
+10. Model Checkpoints
+11. Configuration & Reproducibility
+12. Troubleshooting
+13. FAQ
+14. Roadmap
+15. Contributing
+16. License
+17. Acknowledgements
+18. Citation
+19. Contact
 
-## 📚 Table of Contents
-- [Overview](#-overview)
-- [Features](#-features)
-- [Repository Structure](#-repository-structure)
-- [Quickstart](#-quickstart)
-- [Setup & Installation](#-setup--installation)
-- [Training](#-training)
-- [Evaluation & Metrics](#-evaluation--metrics)
-- [Inference (Generate Summaries)](#-inference-generate-summaries)
-- [Datasets](#-datasets)
-- [Model Checkpoints](#-model-checkpoints)
-- [Configuration & Reproducibility](#-configuration--reproducibility)
-- [Troubleshooting](#-troubleshooting)
-- [FAQ](#-faq)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Acknowledgements](#-acknowledgements)
-- [Citation](#-citation)
-- [Contact](#-contact)
+------------------------------------------------------------
+1. OVERVIEW
+------------------------------------------------------------
+This repository delivers an end-to-end workflow for
+abstractive summarization of medical texts:
+data prep → tokenization → model training → evaluation →
+inference. It is designed for biomedical abstracts,
+clinical trials, and systematic reviews, producing concise
+summaries that retain critical findings.
 
----
+------------------------------------------------------------
+2. FEATURES
+------------------------------------------------------------
+- Custom GPT-style decoder implemented with PyTorch
+- Domain-specific corpora: PubMed & MS² medical review data
+- End-to-end pipeline: preprocessing → training → evaluation
+- Metrics: ROUGE-1/2/L and BLEU
+- Reproducible checkpoints via Git LFS
+- Interactive Jupyter notebook for experimentation
+- Healthcare-aware preprocessing (cleaning references, etc.)
 
-## 🧾 Overview
-This repository delivers an end-to-end workflow for **abstractive summarization of medical texts**: data prep → tokenization → model training → evaluation → inference. It’s geared toward **biomedical abstracts, clinical trials, and systematic reviews**, producing concise summaries that retain critical findings and outcomes.
-
----
-
-## ✨ Features
-- ⚙️ **Custom GPT-style decoder** implemented with PyTorch.
-- 🩺 **Domain-specific corpora**: PubMed & MS² medical review data.
-- 🔁 **Complete pipeline**: preprocessing → training → evaluation → inference (notebook driven).
-- 📊 **Metrics**: ROUGE-1/2/L and BLEU (with hooks for Precision/Recall/F1).
-- 💾 **Reproducible artifacts**: versioned checkpoints (`gpt_decoder_epoch*.pt`) via **Git LFS**.
-- 📓 **Interactive experimentation** in `text_summ_model_training.ipynb`.
-- 🧑‍⚕️ **Healthcare-aware preprocessing** (e.g., de-noising references/section headers).
-
----
-
-## 🗂️ Repository Structure
-```plaintext
+------------------------------------------------------------
+3. REPOSITORY STRUCTURE
+------------------------------------------------------------
 MedicalTextSummarizationModel/
 │
-├── Dataset.zip                               # Original dataset bundle (use Git LFS)
-├── text_summ_model_training.ipynb            # Main training & evaluation notebook
-├── gpt_decoder_epoch1.pt                     # Saved model checkpoint (LFS)
-├── gpt_decoder_epoch2.pt                     # Saved model checkpoint (LFS)
-├── gpt_decoder_epoch3.pt                     # Saved model checkpoint (LFS; best)
+├── Dataset.zip
+├── text_summ_model_training.ipynb
+├── gpt_decoder_epoch1.pt
+├── gpt_decoder_epoch2.pt
+├── gpt_decoder_epoch3.pt
 ├── Medical_Txt_Summarization_Model_Documentation.pdf
-├── requirements.txt                          # Python dependencies
-└── readme.txt                                # Legacy notes
-```
+├── requirements.txt
+└── readme.txt
 
-> 🔴 **Large files are tracked with Git LFS.** If you clone without LFS, checkpoints/datasets will appear as small pointer files.
+* Large files are tracked with Git LFS.
 
----
-
-## ⚡ Quickstart
-```bash
-# 1) Clone
+------------------------------------------------------------
+4. QUICKSTART
+------------------------------------------------------------
+# Clone
 git clone https://github.com/Fadyeskand224/MedicalTextSummarizationModel.git
 cd MedicalTextSummarizationModel
 
-# 2) Enable Git LFS (important for checkpoints/dataset)
+# Enable Git LFS
 git lfs install
 git lfs pull
 
-# 3) Create env & install deps
+# Create environment & install dependencies
 python3 -m venv .venv
-source .venv/bin/activate   # macOS/Linux
-# .venv\Scripts\activate  # Windows
+source .venv/bin/activate   (macOS/Linux)
+.venv\Scripts\activate      (Windows)
 pip install -r requirements.txt
 
-# 4) Unpack dataset bundle (if present)
+# Unpack dataset
 unzip Dataset.zip -d Dataset/
 
-# 5) Open the notebook and run the pipeline
+# Run notebook
 jupyter notebook text_summ_model_training.ipynb
-```
 
----
+------------------------------------------------------------
+5. SETUP & INSTALLATION
+------------------------------------------------------------
+Requirements:
+- Python 3.9+
+- pip, virtualenv or conda
+- Jupyter
+- (Optional) CUDA-enabled GPU
 
-## 🧪 Training
-Open the notebook and execute cells in order:
-1. **Config**: paths, hyperparameters, random seeds.
-2. **Data Prep**: load & clean texts; split train/val/test.
-3. **Tokenization**: (e.g., WordPiece/BPE) with truncation strategies.
-4. **Model**: initialize GPT-style decoder; set optimizer/scheduler.
-5. **Train Loop**: run for N epochs; save checkpoints per epoch.
-6. **Eval**: compute ROUGE/BLEU; pick best checkpoint.
+------------------------------------------------------------
+6. TRAINING
+------------------------------------------------------------
+Steps:
+1. Configure paths, hyperparameters, seeds
+2. Load and clean datasets
+3. Tokenize inputs
+4. Initialize GPT-style decoder
+5. Train for N epochs, save checkpoints
+6. Evaluate with ROUGE/BLEU
 
----
 
-## 📈 Evaluation & Metrics
-| Model Checkpoint       | ROUGE-1 | ROUGE-2 | ROUGE-L | BLEU |
-|------------------------|:------:|:------:|:------:|:----:|
-| gpt_decoder_epoch1.pt  |  XX.X  |  XX.X  |  XX.X  | XX.X |
-| gpt_decoder_epoch2.pt  |  XX.X  |  XX.X  |  XX.X  | XX.X |
-| gpt_decoder_epoch3.pt  | **XX.X**| **XX.X**| **XX.X**|**XX.X**|
+------------------------------------------------------------
+7. INFERENCE (GENERATE SUMMARIES)
+------------------------------------------------------------
+Example usage in Python:
 
----
-
-## 🧾 Inference (Generate Summaries)
-```python
 import torch
 from your_model_impl import YourSummarizerModel, YourTokenizer
 
 ckpt_path = "gpt_decoder_epoch3.pt"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-tokenizer = YourTokenizer.load_pretrained_or_local(...)
+tokenizer = YourTokenizer(...)
 model = YourSummarizerModel(...)
 state = torch.load(ckpt_path, map_location=device)
 model.load_state_dict(state)
 model.to(device).eval()
 
-article = """OBJECTIVE: Evaluate the efficacy..."""
-inputs = tokenizer(article, return_tensors="pt", truncation=True, max_length=2048).to(device)
+article = "OBJECTIVE: Evaluate the efficacy..."
+inputs = tokenizer(article, return_tensors="pt", truncation=True).to(device)
 
 with torch.no_grad():
-    summary_ids = model.generate(
-        **inputs,
-        max_new_tokens=220,
-        temperature=0.7,
-        top_p=0.9,
-        do_sample=False
-    )
-
+    summary_ids = model.generate(**inputs, max_new_tokens=220)
 summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-print("SUMMARY:\n", summary)
-```
 
----
+print(summary)
 
-## 🗄️ Datasets
-- **PubMed Summarization**
-- **MS² Medical Systematic Reviews**
+------------------------------------------------------------
+8. DATASETS
+------------------------------------------------------------
+- PubMed Summarization dataset
+- MS² Medical Systematic Reviews
 
-⚠️ Use datasets for **research/educational purposes** only.  
+Use for research/educational purposes only.
 
----
+------------------------------------------------------------
+9. MODEL CHECKPOINTS
+------------------------------------------------------------
+- gpt_decoder_epoch1.pt  (baseline)
+- gpt_decoder_epoch2.pt  (improved)
+- gpt_decoder_epoch3.pt  (best)
 
-## 💾 Model Checkpoints
-- `gpt_decoder_epoch1.pt` — early baseline
-- `gpt_decoder_epoch2.pt` — improved mid-training
-- `gpt_decoder_epoch3.pt` — final/best
+------------------------------------------------------------
+10. CONFIGURATION & REPRODUCIBILITY
+------------------------------------------------------------
+Example hyperparameters:
+- d_model: 768
+- n_layers: 12
+- n_heads: 12
+- dropout: 0.1
+- batch_size: 8
+- max_input_tokens: 2048
+- lr: 3e-5
+- epochs: 3
 
----
+------------------------------------------------------------
+11. TROUBLESHOOTING
+------------------------------------------------------------
+- Large files missing → run "git lfs install && git lfs pull"
+- CUDA OOM → lower batch size or sequence length
+- Slow CPU training → use smaller configs or GPU
 
-## 🧩 Configuration & Reproducibility
-```yaml
-model:
-  d_model: 768
-  n_layers: 12
-  n_heads: 12
-  dropout: 0.1
-train:
-  batch_size: 8
-  max_input_tokens: 2048
-  max_summary_tokens: 256
-  lr: 3e-5
-  weight_decay: 0.01
-  warmup_steps: 1000
-  epochs: 3
-```
+------------------------------------------------------------
+12. FAQ
+------------------------------------------------------------
+Q: Can I fine-tune on my own data?
+A: Yes, point the notebook to your dataset.
 
----
+Q: Can I deploy as an API?
+A: Yes, wrap inference in FastAPI/Flask.
 
-## 🧯 Troubleshooting
-- **Large files missing:** `git lfs install && git lfs pull`
-- **CUDA OOM:** reduce batch size or max tokens
-- **Slow training:** try GPU or smaller configs
+------------------------------------------------------------
+13. ROADMAP
+------------------------------------------------------------
+- Add Pegasus/BERTSUM baselines
+- Release FastAPI demo service
+- Package as pip module
 
----
+------------------------------------------------------------
+14. CONTRIBUTING
+------------------------------------------------------------
+Fork the repo, create a branch, submit a pull request.
 
-## ❓ FAQ
-**Q:** Can I fine-tune on custom data?  
-**A:** Yes, just point the notebook to your dataset.  
+------------------------------------------------------------
+15. ACKNOWLEDGEMENTS
+------------------------------------------------------------
+- PubMed dataset
+- MS² dataset
+- PyTorch, Hugging Face
 
-**Q:** Can I deploy as an API?  
-**A:** Wrap inference in FastAPI/Flask.  
-
----
-
-## 🗺️ Roadmap
-- Add **Pegasus**/**BERTSUM** baselines  
-- FastAPI demo service  
-- Publish pip package  
-
----
-
-## 🤝 Contributing
-Contributions welcome! Fork → Branch → PR.  
-
----
-
-## 📜 License
-MIT License. See `LICENSE`.  
-
----
-
-## 🙏 Acknowledgements
-- PubMed Dataset  
-- MS² Dataset  
-- PyTorch, Hugging Face  
-
----
-
-## 📝 Citation
-```bibtex
+------------------------------------------------------------
+16. CITATION
+------------------------------------------------------------
 @software{medical_text_summarization_model_2025,
   author  = {Eskandr, Fady},
   title   = {Medical Text Summarization Model},
   year    = {2025},
   url     = {https://github.com/Fadyeskand224/MedicalTextSummarizationModel}
 }
-```
 
----
-
-## 📬 Contact
-- **Author:** Fady Eskandr  
-- **GitHub:** https://github.com/Fadyeskand224  
-- **LinkedIn:** https://www.linkedin.com/in/fady-eskandr  
+------------------------------------------------------------
+17. CONTACT
+------------------------------------------------------------
+Author: Fady Eskandr
+GitHub: https://github.com/Fadyeskand224
+LinkedIn: https://www.linkedin.com/in/fady-eskandr
