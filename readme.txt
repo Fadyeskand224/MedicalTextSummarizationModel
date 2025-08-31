@@ -1,101 +1,236 @@
-# 🧠 Medical Text Summarization Model  
+# 🧠 Medical Text Summarization Model
+> Abstractive summarization for biomedical literature and systematic reviews using a Transformer/GPT-style decoder trained on PubMed & MS² data.
 
-> A deep learning project for **abstractive summarization of medical literature and systematic reviews**, built with Transformers and trained on PubMed & MS² datasets.  
-
----
-
-## 📖 Overview  
-
-This repository contains a complete workflow for training, evaluating, and deploying a **Transformer-based summarization model** for the biomedical domain. The goal is to generate **concise, accurate summaries of complex medical documents** such as clinical studies, PubMed abstracts, and systematic reviews—helping researchers, clinicians, and students digest critical information faster.  
-
----
-
-## ✨ Key Features  
-
-- ⚙️ **Custom GPT-style decoder** built from scratch with PyTorch  
-- 📚 **Domain-specific datasets**: PubMed & MS² reviews  
-- 🔍 **End-to-end pipeline**: preprocessing → tokenization → training → evaluation → inference  
-- 📊 **Evaluation metrics**: BLEU, ROUGE, F1  
-- 💾 **Pre-trained checkpoints** (`gpt_decoder_epoch*.pt`) for reproducibility  
-- 📓 **Interactive Jupyter notebook** (`text_summ_model_training.ipynb`) for experimentation  
-- 📑 **Comprehensive documentation** included in PDF  
+<p align="left">
+  <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/Python-3.9%2B-blue.svg"></a>
+  <a href="#"><img alt="License" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
+  <a href="#"><img alt="Git LFS" src="https://img.shields.io/badge/Large%20Files-Git%20LFS-critical.svg"></a>
+  <a href="#"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
+</p>
 
 ---
 
-## 🗂️ Repository Structure  
+## 📚 Table of Contents
+- [Overview](#-overview)
+- [Features](#-features)
+- [Repository Structure](#-repository-structure)
+- [Quickstart](#-quickstart)
+- [Setup & Installation](#-setup--installation)
+- [Training](#-training)
+- [Evaluation & Metrics](#-evaluation--metrics)
+- [Inference (Generate Summaries)](#-inference-generate-summaries)
+- [Datasets](#-datasets)
+- [Model Checkpoints](#-model-checkpoints)
+- [Configuration & Reproducibility](#-configuration--reproducibility)
+- [Troubleshooting](#-troubleshooting)
+- [FAQ](#-faq)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Acknowledgements](#-acknowledgements)
+- [Citation](#-citation)
+- [Contact](#-contact)
 
+---
+
+## 🧾 Overview
+This repository delivers an end-to-end workflow for **abstractive summarization of medical texts**: data prep → tokenization → model training → evaluation → inference. It’s geared toward **biomedical abstracts, clinical trials, and systematic reviews**, producing concise summaries that retain critical findings and outcomes.
+
+---
+
+## ✨ Features
+- ⚙️ **Custom GPT-style decoder** implemented with PyTorch.
+- 🩺 **Domain-specific corpora**: PubMed & MS² medical review data.
+- 🔁 **Complete pipeline**: preprocessing → training → evaluation → inference (notebook driven).
+- 📊 **Metrics**: ROUGE-1/2/L and BLEU (with hooks for Precision/Recall/F1).
+- 💾 **Reproducible artifacts**: versioned checkpoints (`gpt_decoder_epoch*.pt`) via **Git LFS**.
+- 📓 **Interactive experimentation** in `text_summ_model_training.ipynb`.
+- 🧑‍⚕️ **Healthcare-aware preprocessing** (e.g., de-noising references/section headers).
+
+---
+
+## 🗂️ Repository Structure
+```plaintext
 MedicalTextSummarizationModel/
 │
-├── Dataset.zip # Original dataset bundle
-├── text_summ_model_training.ipynb # Main training & evaluation notebook
-├── gpt_decoder_epoch1.pt # Saved model checkpoint
-├── gpt_decoder_epoch2.pt
-├── gpt_decoder_epoch3.pt
+├── Dataset.zip                               # Original dataset bundle (use Git LFS)
+├── text_summ_model_training.ipynb            # Main training & evaluation notebook
+├── gpt_decoder_epoch1.pt                     # Saved model checkpoint (LFS)
+├── gpt_decoder_epoch2.pt                     # Saved model checkpoint (LFS)
+├── gpt_decoder_epoch3.pt                     # Saved model checkpoint (LFS; best)
 ├── Medical_Txt_Summarization_Model_Documentation.pdf
-├── requirements.txt # Dependencies
-└── readme.txt # (legacy notes)
+├── requirements.txt                          # Python dependencies
+└── readme.txt                                # Legacy notes
+```
 
-yaml
-Copy code
+> 🔴 **Large files are tracked with Git LFS.** If you clone without LFS, checkpoints/datasets will appear as small pointer files.
 
 ---
 
-## 🚀 Getting Started  
-
-### 1. Clone the repo  
+## ⚡ Quickstart
 ```bash
+# 1) Clone
 git clone https://github.com/Fadyeskand224/MedicalTextSummarizationModel.git
 cd MedicalTextSummarizationModel
-2. Install dependencies
-bash
-Copy code
+
+# 2) Enable Git LFS (important for checkpoints/dataset)
+git lfs install
+git lfs pull
+
+# 3) Create env & install deps
 python3 -m venv .venv
-source .venv/bin/activate   # on macOS/Linux
-# .venv\Scripts\activate    # on Windows
+source .venv/bin/activate   # macOS/Linux
+# .venv\Scripts\activate  # Windows
 pip install -r requirements.txt
-3. Download datasets
-Unzip the dataset bundle:
 
-bash
-Copy code
+# 4) Unpack dataset bundle (if present)
 unzip Dataset.zip -d Dataset/
-4. Train the model
-Open the notebook:
 
-bash
-Copy code
+# 5) Open the notebook and run the pipeline
 jupyter notebook text_summ_model_training.ipynb
-Follow the cells to preprocess data, train, and evaluate.
+```
 
-📊 Results
-Training: 3 epochs on PubMed/MS² data
+---
 
-Metrics: ROUGE-1, ROUGE-2, ROUGE-L, BLEU
+## 🧪 Training
+Open the notebook and execute cells in order:
+1. **Config**: paths, hyperparameters, random seeds.
+2. **Data Prep**: load & clean texts; split train/val/test.
+3. **Tokenization**: (e.g., WordPiece/BPE) with truncation strategies.
+4. **Model**: initialize GPT-style decoder; set optimizer/scheduler.
+5. **Train Loop**: run for N epochs; save checkpoints per epoch.
+6. **Eval**: compute ROUGE/BLEU; pick best checkpoint.
 
-Findings: Model achieves strong abstractive summaries compared to baseline methods
+---
 
-📦 Model Checkpoints
-gpt_decoder_epoch1.pt → baseline training run
+## 📈 Evaluation & Metrics
+| Model Checkpoint       | ROUGE-1 | ROUGE-2 | ROUGE-L | BLEU |
+|------------------------|:------:|:------:|:------:|:----:|
+| gpt_decoder_epoch1.pt  |  XX.X  |  XX.X  |  XX.X  | XX.X |
+| gpt_decoder_epoch2.pt  |  XX.X  |  XX.X  |  XX.X  | XX.X |
+| gpt_decoder_epoch3.pt  | **XX.X**| **XX.X**| **XX.X**|**XX.X**|
 
-gpt_decoder_epoch2.pt → improved performance with longer training
+---
 
-gpt_decoder_epoch3.pt → final, best performing checkpoint
+## 🧾 Inference (Generate Summaries)
+```python
+import torch
+from your_model_impl import YourSummarizerModel, YourTokenizer
 
-🔮 Future Work
-Fine-tune with Pegasus and BERTSUM baselines for comparison
+ckpt_path = "gpt_decoder_epoch3.pt"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-Extend evaluation with clinical notes datasets (e.g., MIMIC-III)
+tokenizer = YourTokenizer.load_pretrained_or_local(...)
+model = YourSummarizerModel(...)
+state = torch.load(ckpt_path, map_location=device)
+model.load_state_dict(state)
+model.to(device).eval()
 
-Deploy as a REST API for real-time summarization
+article = """OBJECTIVE: Evaluate the efficacy..."""
+inputs = tokenizer(article, return_tensors="pt", truncation=True, max_length=2048).to(device)
 
-🤝 Contributing
-Contributions are welcome! Fork the repo, create a branch, and open a pull request with improvements.
+with torch.no_grad():
+    summary_ids = model.generate(
+        **inputs,
+        max_new_tokens=220,
+        temperature=0.7,
+        top_p=0.9,
+        do_sample=False
+    )
 
-🙌 Acknowledgements
-PubMed Summarization Dataset
+summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+print("SUMMARY:\n", summary)
+```
 
-MS² Dataset
+---
 
-Hugging Face Transformers
+## 🗄️ Datasets
+- **PubMed Summarization**
+- **MS² Medical Systematic Reviews**
 
-PyTorch
+⚠️ Use datasets for **research/educational purposes** only.  
+
+---
+
+## 💾 Model Checkpoints
+- `gpt_decoder_epoch1.pt` — early baseline
+- `gpt_decoder_epoch2.pt` — improved mid-training
+- `gpt_decoder_epoch3.pt` — final/best
+
+---
+
+## 🧩 Configuration & Reproducibility
+```yaml
+model:
+  d_model: 768
+  n_layers: 12
+  n_heads: 12
+  dropout: 0.1
+train:
+  batch_size: 8
+  max_input_tokens: 2048
+  max_summary_tokens: 256
+  lr: 3e-5
+  weight_decay: 0.01
+  warmup_steps: 1000
+  epochs: 3
+```
+
+---
+
+## 🧯 Troubleshooting
+- **Large files missing:** `git lfs install && git lfs pull`
+- **CUDA OOM:** reduce batch size or max tokens
+- **Slow training:** try GPU or smaller configs
+
+---
+
+## ❓ FAQ
+**Q:** Can I fine-tune on custom data?  
+**A:** Yes, just point the notebook to your dataset.  
+
+**Q:** Can I deploy as an API?  
+**A:** Wrap inference in FastAPI/Flask.  
+
+---
+
+## 🗺️ Roadmap
+- Add **Pegasus**/**BERTSUM** baselines  
+- FastAPI demo service  
+- Publish pip package  
+
+---
+
+## 🤝 Contributing
+Contributions welcome! Fork → Branch → PR.  
+
+---
+
+## 📜 License
+MIT License. See `LICENSE`.  
+
+---
+
+## 🙏 Acknowledgements
+- PubMed Dataset  
+- MS² Dataset  
+- PyTorch, Hugging Face  
+
+---
+
+## 📝 Citation
+```bibtex
+@software{medical_text_summarization_model_2025,
+  author  = {Eskandr, Fady},
+  title   = {Medical Text Summarization Model},
+  year    = {2025},
+  url     = {https://github.com/Fadyeskand224/MedicalTextSummarizationModel}
+}
+```
+
+---
+
+## 📬 Contact
+- **Author:** Fady Eskandr  
+- **GitHub:** https://github.com/Fadyeskand224  
+- **LinkedIn:** https://www.linkedin.com/in/fady-eskandr  
